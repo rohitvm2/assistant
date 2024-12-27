@@ -1,14 +1,12 @@
 let box = document.querySelector(".box");
 let btn = document.querySelector("button");
 
-let isListening = false;
-
 const speakFunc = (input) => {
   let speakInput = new SpeechSynthesisUtterance(input);
   // speakInput.rate = 1;
   // speakInput.pitch = 1;
   speakInput.volume = 1.0;
-  speakInput.lang = "en-IN";
+  speakInput.lang = "en-US";
   window.speechSynthesis.speak(speakInput);
 };
 window.onload = () => {
@@ -38,31 +36,16 @@ const startVoiceInput = () => {
       box.classList.remove("btn-box");
       btn.innerHTML = `<i class="fa-solid fa-microphone-lines-slash"></i>`;
     };
-    
-    recognition.onerror = (e) => {
-      speakFunc("An error occured while recognizing speech. Please try again.");
-      console.log(e);
-    };
     recognition.start();
   } else {
     alert("Your Browser does not support voice input !");
   }
 };
 
-
 btn.onclick = () => {
-  if(isListening){
-    box.classList.remove("btn-box");
-    btn.innerHTML = `<i class="fa-solid fa-microphone-lines-slash"></i>`;
-    recognition.stop();
-    isListening = false;
-  }
-  else{
-    box.classList.add("btn-box");
-    btn.innerHTML = `<i class="fa-solid fa-microphone-lines"></i>`;
-    startVoiceInput();
-    isListening = true;
-  }
+  btn.classList.add("btn-box");
+  btn.innerHTML = `<i class="fa-solid fa-microphone-lines"></i>`;
+  startVoiceInput();
 };
 
 const handleCommands = (command) => {
@@ -100,15 +83,17 @@ const handleCommands = (command) => {
   ) {
     speakFunc("Opening... facebook");
     window.open("https://www.facebook.com");
-  } else if (
-    command.includes("open youtube") ||
-    command.includes("youtube")
-  ) {
+  } else if (command.includes("open youtube") || command.includes("youtube")) {
     speakFunc("Opening... youtube");
     window.open("https://www.youtube.com");
-  }
-  else{
-    speakFunc(`This is,what i found on internet regarding ${command}`)
-    window.open(`https://www.google.com/search?q=${command}`)
+  } else if (command.includes("tell me time") || command.includes("time")) {
+    let time = new Date().toLocaleString(undefined, {
+      hour: "numeric",
+      minute: "numeric",
+    });
+    speakFunc(time);
+  } else {
+    speakFunc(`This is,what i found on internet regarding ${command}`);
+    window.open(`https://www.google.com/search?q=${command}`);
   }
 };
