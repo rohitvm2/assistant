@@ -92,6 +92,13 @@ const handleCommands = (command) => {
       minute: "numeric",
     });
     speakFunc(time);
+  }
+  else if (command.includes("tell me date") || command.includes("date")) {
+    let date = new Date().toLocaleString(undefined, {
+      day: "numeric",
+      month: "long",
+    });
+    speakFunc(date);
   } else {
     speakFunc(`This is,what i found on internet regarding ${command}`);
     window.open(`https://www.google.com/search?q=${command}`);
